@@ -15,12 +15,4 @@ public class ProducerApplication {
         SpringApplication.run(ProducerApplication.class, args);
     }
 
-    @Bean
-    public AmazonSQS createSQSClient() {
-      return AmazonSQSClient.builder()
-                .withCredentials(new ProfileCredentialsProvider())
-                .withRegion(Regions.US_EAST_2)
-                .build();
-    }
-
 }

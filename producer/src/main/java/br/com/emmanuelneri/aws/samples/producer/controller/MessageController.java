@@ -18,18 +18,8 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-    @RequestMapping(method = RequestMethod.POST)
-    public void send(@RequestBody String message) {
-        messageService.sentToQueue(message);
-    }
-
-    @RequestMapping(value="/batch", method = RequestMethod.POST)
-    public void batchSend(@RequestBody List<String> messages) {
-        messageService.sentToQueue(messages);
-    }
-
-    @RequestMapping(value="/with-attributes", method = RequestMethod.POST)
-    public void sendWithAttributes(@RequestBody String message) {
-        messageService.sentToQueueWithAttributes(message);
+    @RequestMapping(value = "/myMessage",method = RequestMethod.GET)
+    public void sendMessageObject(){
+        messageService.sentMyMessage();
     }
 }

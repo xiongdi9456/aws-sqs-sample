@@ -1,5 +1,7 @@
 package br.com.emmanuelneri.aws.samples.producer.service;
 
+import br.com.emmanuelneri.aws.samples.producer.config.MyMessage;
+import com.alibaba.fastjson.JSON;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import com.amazonaws.services.sqs.model.SendMessageBatchRequest;
@@ -30,51 +32,16 @@ public class MessageService {
     @Autowired
     private AmazonSQS amazonSQS;
 
-    public void sentToQueue(String message) {
+
+    public void sentMyMessage() {
+        MyMessage myMessage = new MyMessage(234563L,UUID.randomUUID().toString(),"1234567890",1,1,"aaadddddddaaaaadddddaaaaasdsadas","2018-05-13 13:22:12.228");
         final SendMessageRequest sendMessageRequest = new SendMessageRequest()
                 .withQueueUrl(queueName)
-                .withMessageBody(message);
+                .withMessageBody(JSON.toJSONString(myMessage));
 
         amazonSQS.sendMessage(sendMessageRequest);
     }
 
-    public void sentToQueue(List<String> messages) {
-        Lists.partition(messages, MAX_BATCH_SEND_SQS)
-                .forEach(strings -> {
-                    final AtomicInteger index = new AtomicInteger();
-                    final List<SendMessageBatchRequestEntry> entries = strings.stream()
-                            .map(message -> {
-                                final String messageId = String.valueOf(index.getAndIncrement());
-                                return new SendMessageBatchRequestEntry(messageId, message);
-                            })
-                            .collect(Collectors.toList());
 
-                    final SendMessageBatchRequest sendMessageRequest = new SendMessageBatchRequest()
-                            .withQueueUrl(queueName)
-                            .withEntries(entries);
-
-                    amazonSQS.sendMessageBatch(sendMessageRequest);
-                });
-    }
-
-    public void sentToQueueWithAttributes(String message) {
-        final Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
-        messageAttributes.put("id",
-                new MessageAttributeValue()
-                 .withDataType("String")
-                 .withStringValue(UUID.randomUUID().toString()));
-
-        messageAttributes.put("date",
-                new MessageAttributeValue()
-                        .withDataType("String")
-                        .withStringValue(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))));
-
-        final SendMessageRequest sendMessageRequest = new SendMessageRequest()
-                .withQueueUrl(queueName)
-                .withMessageAttributes(messageAttributes)
-                .withMessageBody(message);
-
-        amazonSQS.sendMessage(sendMessageRequest);
-    }
 
 }

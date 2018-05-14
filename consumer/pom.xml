@@ -38,6 +38,14 @@
             <artifactId>amazon-sqs-java-messaging-lib</artifactId>
             <version>${aws.sqs.messaging}</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.47</version>
+        </dependency>
+
     </dependencies>
 
     <build>
